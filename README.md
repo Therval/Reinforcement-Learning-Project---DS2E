@@ -9,14 +9,14 @@ Vous y trouverez tout le matériel nécessaire à l'exécution du projet :
   Les données boursières sont obtenus depuis le site Yahoo Finance.
   
   
-  # Finir présentation
+ ## Finir présentation
   - Inclure plus d'informations sur les algorithmes utilisés
   - Mettre des images
   - ...
   
   
-  ## Informations
-  Université : Université de Strasbourg - FSEG
-  Cours : Apprentissage par renforcement
-  Professeur : M. Bertrand KOEBEL
-  Étudiants : BRUNIQUET Mathis, JOLY Valentin
+ ## Informations
+  - Université : Université de Strasbourg - FSEG
+  - Cours : Apprentissage par renforcement
+  - Professeur : M. Bertrand KOEBEL
+  - Étudiants : BRUNIQUET Mathis, JOLY Valentin
