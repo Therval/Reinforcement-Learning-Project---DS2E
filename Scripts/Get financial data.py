@@ -25,14 +25,14 @@ import os
 dataset = yf.download(tickers = ["FP.PA", "SAN.PA", "BNP.PA", "MC.PA", "ML.PA"])
 dataset
 
-# - Changer le noms des colonnes
-dataset.rename(columns={"FP.PA":"Total", "SAN.PA":"Sanofi",
-                         "BNP.PA" : "BNP", "MC.PA":"LVMH", "ML.PA":"Michelin"})
-
 # %% 
 # - Limitation au prix de clôture
 dataset.columns # Format MultiIndex de Pandas
 dataset = dataset["Close"]
+
+# - Changer le noms des colonnes
+dataset.rename(columns={"FP.PA":"Total", "SAN.PA":"Sanofi",
+                         "BNP.PA" : "BNP", "MC.PA":"LVMH", "ML.PA":"Michelin"})
 
 # %%
 # - Grahpiques d'évolutions des cours
