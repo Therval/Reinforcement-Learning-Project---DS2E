@@ -48,9 +48,9 @@ On vient donc de renommer les colonnes, pour une meilleure lisibilité, et de s�
 ```python
 dataset.plot(figsize = (16,8))
 ```
-![Image](/Data/Graph data.png?raw=true)
+![Image](../Graph data.png)
 
-On voit qu'il est préférable de filtrer nos données à la date du 3/01/2000 pour avoir le prix pour toutes les actions par jour. 
+On voit qu'il est préférable de filtrer nos données à la date du 03/01/2000 pour avoir le prix pour toutes les actions par jour. 
 
 ```python
 dataset = dataset.loc[dataset.index >= '2000-01-03T00:00:00.000']
