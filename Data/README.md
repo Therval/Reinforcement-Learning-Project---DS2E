@@ -6,6 +6,7 @@ Pour ce projet d'apprentissage par renforcement, nous allons nous baser sur les 
 - BNP Paribas (BNP)
 - LVMH (MC)
 - Michelin (ML)
+
 Ces actions ont été choisies pour leur ancienneté sur le CAC40 : elles ont toutes été cotées à la création de l'indice, le 31 octobre 1987.
 
 Nous travaillerons sur les prix de fermetures des actions (Close) par jour.
