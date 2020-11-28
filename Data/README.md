@@ -48,7 +48,7 @@ On vient donc de renommer les colonnes, pour une meilleure lisibilité, et de s�
 ```python
 dataset.plot(figsize = (16,8))
 ```
-![ScreenShot](Graph data.png)
+![Image](Graph data.png)
 
 On voit qu'il est préférable de filtrer nos données à la date du 03/01/2000 pour avoir le prix pour toutes les actions par jour. 
 
