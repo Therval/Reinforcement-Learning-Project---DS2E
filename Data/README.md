@@ -12,7 +12,7 @@ Nous travaillerons sur les prix de fermetures des actions (Close) par jour.
 Ce cadre de travail nous est imposé par la limite de la récupération des données de Yahoo Finance dans un cadre gratuit. En effet, sans compte payant, il est impossible de récupérer des données "intraday" sur une période supérieure à 60 jours.
 
 ### Récupération des données
-##### Librairies
+#### Librairies
 ```python
 import yfinance as yf
 import pandas as pd
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import os
 ```
 
-##### Données
+#### Données
 ```python
 dataset = yf.download(tickers = ["FP.PA", "SAN.PA", "BNP.PA", "MC.PA", "ML.PA")
 ```
@@ -44,11 +44,11 @@ dataset.rename(columns={"FP.PA":"Total",
 
 On vient donc de renommer les colonnes, pour une meilleure lisibilité, et de sélectionner exclusivement le prix de clôture des actions.
 
-##### Graphique
+#### Graphique
 ```python
 dataset.plot(figsize = (16,8))
 ```
-![alt text] (Data/Graph data.png)
+![Image](../Data/Graph data.png?raw=true)
 
 On voit qu'il est préférable de filtrer nos données à la date du 3/01/2000 pour avoir le prix pour toutes les actions par jour. 
 
