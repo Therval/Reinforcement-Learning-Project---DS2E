@@ -11,7 +11,11 @@ Vous y trouverez tout le matériel nécessaire à l'exécution du projet :
  ## Données
  
  ## Méthodologie
- 
+ ### Définitions des stratégies
+ On va étudier la pertinance de stratégies basées sur l'apprentissage par renforcement en les comparants à des stratégies financières simples :
+ - Buy and Hold 
+ - Buy, Hold and Sell
+  
   
  ## Informations
   - Université : Université de Strasbourg - FSEG
