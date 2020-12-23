@@ -49,6 +49,7 @@ Train : 2000 - 2019
 Test : 2019 - 2020
 """
 dataset = dataset.loc[dataset.index >= '2000-01-03T00:00:00.000']
+
 # Train
 Train = dataset.loc[dataset.index < '2018-01-03T00:00:00.000']
 # Test
@@ -58,5 +59,6 @@ Test = dataset.loc[dataset.index >= '2018-01-03T00:00:00.000']
 # - Save Train and Test datasets
 path = "/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data"
 
+dataset.to_csv(os.path.join(path, r"Dataset_full.csv"))
 Train.to_csv(os.path.join(path, r"Train.csv"))
 Test.to_csv(os.path.join(path, r"Test.csv"))
