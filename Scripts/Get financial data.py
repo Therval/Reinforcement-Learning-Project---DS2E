@@ -42,23 +42,12 @@ Cela permet également de connaître à quel moment les cours démarrent.
 dataset.plot(figsize = (16,8))
 
 # %% 
-# - Data processing et split train / test sets
-"""
-On ne garde que les données à l'an 2000. 
-Train : 2000 - 2019
-Test : 2019 - 2020
-"""
+# - Data processing
 dataset = dataset.loc[dataset.index >= '2000-01-03T00:00:00.000']
-
-# Train
-Train = dataset.loc[dataset.index < '2018-01-03T00:00:00.000']
-# Test
-Test = dataset.loc[dataset.index >= '2018-01-03T00:00:00.000']
+dataset.dropna(inplace = True)
+dataset = dataset.reset_index()
 
 # %% 
-# - Save Train and Test datasets
+# - Save dataset
 path = "/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data"
-
-dataset.to_csv(os.path.join(path, r"Dataset_full.csv"))
-Train.to_csv(os.path.join(path, r"Train.csv"))
-Test.to_csv(os.path.join(path, r"Test.csv"))
+dataset.loc[:, dataset.columns != 'Date'].to_csv(os.path.join(path, r"Dataset_full.csv"), index = False)
