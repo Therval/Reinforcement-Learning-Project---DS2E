@@ -7,85 +7,154 @@ RL Prject : Analyse
 # Libraries
 import pandas as pd
 import numpy as np 
+import time
+import matplotlib.pyplot as plt
 
 # %%
 # --- 2. Definition des strategies financières de bases
 class Agent:
-    def __init__(self, capital, commission):
-        self.capital = capital #Correspond à l'argent que l'agent peut investir
-        self.commission = commission #Commission pour le passage d'un ordre
+    def __init__(self, Capital, Commission):
+        self.Capital = Capital #Correspond à l'argent que l'agent peut investir
+        self.Commission = Commission #Commission pour le passage d'un ordre
         self.stocks = pd.read_csv("/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data/Dataset_full.csv") #Représente le dataset 
+
+        self.nb_actions = 0
 
     def market_strategy(self):
         """
         ...
         """
         # Définition des variables
-        capital = self.capital
-        
-        stocks = self.stocks.copy()
-        stocks.dropna(inplace = True)
-        stocks.reset_index()
-
-        pf_actions = pd.DataFrame(np.zeros((self.stocks.shape[0], 4)),
-                                  columns = ["V_bourse", "V_portefeuille", "Gains", "Cum_gains"])
+        pf_actions = pd.DataFrame(np.zeros((self.stocks.shape[0], 2)),
+                                  columns = ["V_bourse", "Portefeuille"])
 
         # Definition des variables en t = 0
-        pf_actions["V_bourse"][0] = round(stocks.loc[0, 'BNP.PA':'SAN.PA'].sum(), 2)
+        pf_actions["V_bourse"][0] = round(self.stocks.loc[0, 'BNP.PA':'SAN.PA'].sum(), 2)
 
-        nb_actions = int(capital / pf_actions["V_bourse"][0])
-        pf_actions["V_portefeuille"][0] = round(nb_actions * pf_actions["V_bourse"][0], 2)
-        pf_actions["Gains"][0] = 0
-        pf_actions["Cum_gains"][0] = 0
+        self.nb_actions = int(self.Capital / pf_actions["V_bourse"][0])
 
-        capital = capital - pf_actions["V_portefeuille"][0] # ce qu'il reste après investissement
+        pf_actions["Portefeuille"][0] = round(self.nb_actions * pf_actions["V_bourse"][0], 2)
+
+        self.Capital = self.Capital - pf_actions["Portefeuille"][0] # ce qu'il reste après investissement
 
         # Execution
-        for i in range(1, len(stocks)):
+        for i in range(1, len(self.stocks)):
             # Mise à jour du portefeuille d'actions
-            pf_actions["V_bourse"][i] = round(stocks.loc[i, 'BNP.PA':'SAN.PA'].sum(), 2)
-            pf_actions["V_portefeuille"][i] = round(nb_actions * pf_actions["V_bourse"][i], 2)
-            pf_actions["Gains"][i] = round((((pf_actions["V_portefeuille"][i] - pf_actions["V_portefeuille"][i-1]) / pf_actions["V_portefeuille"][i])*100), 2)
-            pf_actions["Cum_gains"][i] = round(pf_actions["Gains"][i] + pf_actions["Cum_gains"][i-1], 2)
+            pf_actions["V_bourse"][i] = round(self.stocks.loc[i, 'BNP.PA':'SAN.PA'].sum(), 2)
+            pf_actions["Portefeuille"][i] = round(self.nb_actions * pf_actions["V_bourse"][i], 2)
+        
+        pf_actions["Gain"] = pf_actions["Portefeuille"].pct_change()*100
+        pf_actions["Cum_gain"] = pf_actions.Gain.cumsum()
 
-        capital = capital + pf_actions["V_portefeuille"].iloc[-1]
-        profit = pf_actions["V_portefeuille"].iloc[-1] - pf_actions["V_portefeuille"][0]
+        self.Capital = self.Capital + pf_actions["Portefeuille"].iloc[-1]
+        profit = pf_actions["Portefeuille"].iloc[-1] - pf_actions["Portefeuille"][0]
+        
+        print("Profit réalisé par cet agent: " + str(profit) + "€")
+        print("Gain cumulé: " + str(round(pf_actions["Cum_gain"].iloc[-1], 2)) + "%")
 
-        return capital, pf_actions, profit
+        return self.Capital, pf_actions, profit
     
-    def cross_moving_avr_strategy(self, strategy):
+
+    
+    def cross_moving_avr_strategy(self):
         """
         ...
         """
-        # Récupération des variables
-        capital = self.capital
-        commission = self.commission
-
-        # Définition des outils
-        
-        # Définition des signaux
-
-        # 1. Test sur 2 ans pour identifier la meilleure action
+        # Calcul de volatilité pour choix de l'action à trade (test sur 2 ans)
+        variation_jour = self.stocks.iloc[0:538].pct_change()
+        # Quel action maximise la volatilité ?
+        max_vola = variation_jour.rolling(50).std() * np.sqrt(50)
+        action = max_vola.sum().idxmax(axis = 1)
+        print("L'action qui maximise la volatilité sur la période est " + str(action))
 
         # 2. Execution de la stratégie sur le reste de la période
+        # Nouveau dataset avec l'action identitifiée seulement
+        stock = pd.DataFrame(self.stocks[action].iloc[539:5381])
+        stock = stock.reset_index() # Réinitialiser l'index du dataset
+        stock.drop(["index"], axis=1, inplace = True)
+
+        # Calcul des moyennes mobiles
+        stock['MA 50'] = stock.iloc[:, 0].rolling(window=50, min_periods=1, center=False).mean()
+        stock['MA 100'] = stock.iloc[:, 0].rolling(window=100, min_periods=1, center=False).mean()
+
+        # Definition des variables de signaux d'informations
+        stock["Signal"] = np.where(stock['MA 50'] > stock['MA 100'], 1, 0)   
+        stock["Ordre"] = stock["Signal"].diff()
+
+        # Definition des variables d'évolution du portfeuille, capital et gains 
+        Portefeuille = [0]
+        Capital = [10000]
+        Gains = [0]
+
+        # Execution de la strategie
+        for i in range(1, len(stock)):
+            # Signal d'achat 1, vente -1
+            if stock["Ordre"][i] == 1:
+                "Dans ce cas, on achète"
+                self.nb_actions = int((Capital[i-1] - Capital[i-1]*self.Commission) / stock["MC.PA"][i]) #Nombre d'action que l'on peut acheter
+                Portefeuille.append(round((self.nb_actions*stock["MC.PA"][i]), 2)) 
+                Capital.append(round(Capital[i-1] - (Portefeuille[i] + (Portefeuille[i]*self.Commission)), 2))
+
+            elif stock["Ordre"][i] == -1:
+                Capital.append(((Portefeuille[i-1] - Portefeuille[i-1]*self.Commission) + Capital[i-1]))
+                Portefeuille.append(0)
+                self.nb_actions = 0
+
+            else:
+                Portefeuille.append(round((self.nb_actions*stock["MC.PA"][i]), 2))
+                Capital.append(Capital[i-1])
+        
+        # Ajout de variables au dataset pour analyse
+        stock["Portefeuille"] = Portefeuille
+        stock["Capital"] = Capital
+        stock["Total"] = stock["Portefeuille"] + stock["Capital"]
+        stock["Gain"] = stock["Total"].pct_change()*100
+        stock["Cum_gain"] = stock.Gain.cumsum()
+
+        profit = stock["Total"].iloc[-1] - stock["Total"].iloc[0] # Calcul du profit
+
+        print("Profit réalisé par cet agent: " + str(profit) + "€")
+        print("Gain cumulé: " + str(round(stock["Cum_gain"].iloc[-1], 2)) + "%")
+
+        return stock, profit
 
 
-    
+
 # %% Test 1 : Stratégie simple (market return)
 # -- Strategie
-Strategie1 = Agent(capital = 10000, commission = 0)
+Strategie1 = Agent(Capital = 10000, Commission = 0)
 capital, pf_actions, profit = Strategie1.market_strategy()
 
+# -- Informations
+# Gain cumulatif
+pf_actions.Cum_gain.plot(figsize = (16, 10))
+plt.title("Gain cumulatif : Stratégie 1")
+
+# %% Test 2 : Cross Moving average
+# -- Strategie
+Strategie2 = Agent(Capital = 10000, Commission = 0.001)
+stock, profit = Strategie2.cross_moving_avr_strategy()
+
 # %%
-# -- Informations
-pf_actions.Cum_gains.plot()
+# -- Information
+# Gain cumulatif
+stock.Cum_gain.plot(figsize = (16, 10))
+plt.title("Gain cumulatif : Stratégie 2")
 
-# %% Test 2 : Cross Moving average - Court terme
-# -- Strategie
+# %% 
+# Passage d'ordre
+# Initialize the plot figure
+fig = plt.figure(figsize = (16, 10))
 
-# -- Informations
+ax1 = fig.add_subplot(111,  ylabel='Prix en €')
+stock["MC.PA"].plot(ax=ax1, color='black', lw=2.)
+stock[['MA 50', 'MA 100']].plot(ax=ax1, lw=2.)
+ax1.plot(stock.loc[stock.Ordre == 1].index, 
+         stock["MA 50"][stock.Ordre == 1.0],
+         '^', markersize=10, color='g')
+ax1.plot(stock.loc[stock.Ordre == -1].index, 
+         stock["MA 50"][stock.Ordre == -1],
+         'v', markersize=10, color='r')
 
-# %% Test 3 : Cross Moving average - Long terme
-# -- Strategie
-
-# -- Informations
+plt.title("Visualisation des ordres passés")
+plt.show()
