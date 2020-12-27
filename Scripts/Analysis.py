@@ -81,7 +81,7 @@ class Agent:
 
         # Definition des variables d'évolution du portfeuille, capital et gains 
         Portefeuille = [0]
-        Capital = [10000]
+        Capital = [self.Capital]
         Gains = [0]
 
         # Execution de la strategie
@@ -130,8 +130,8 @@ plt.title("Gain cumulatif : Stratégie 1")
 
 # %% Test 2 : Cross Moving average
 # -- Strategie
-Strategie2 = Agent(Capital = 10000, Commission = 0.001)
-stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=150)
+Strategie2 = Agent(Capital = 1000, Commission = 0.001)
+stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=200)
 
 # %%
 # -- Information
@@ -157,4 +157,13 @@ ax1.plot(stock.loc[stock.Ordre == -1].index,
 plt.title("Visualisation des ordres passés")
 plt.show()
 
-# %%
+# %% 3. Bandit à 5 bras
+"""
+Créer une classe spécifique
+"""
+# %% 4. ReinforcedAgent
+class QAgent():
+    """
+    A faire : 
+        - Agent avec q-learning
+    """
