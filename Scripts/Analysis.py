@@ -146,13 +146,15 @@ fig = plt.figure(figsize = (16, 10))
 
 ax1 = fig.add_subplot(111,  ylabel='Prix en €')
 stock["MC.PA"].plot(ax=ax1, color='black', lw=2.)
-stock[['MA 50', 'MA 100']].plot(ax=ax1, lw=2.)
+stock[['MA_court', 'MA_long']].plot(ax=ax1, lw=2.)
 ax1.plot(stock.loc[stock.Ordre == 1].index, 
-         stock["MA 50"][stock.Ordre == 1.0],
+         stock["MA_court"][stock.Ordre == 1.0],
          '^', markersize=10, color='g')
 ax1.plot(stock.loc[stock.Ordre == -1].index, 
-         stock["MA 50"][stock.Ordre == -1],
+         stock["MA_long"][stock.Ordre == -1],
          'v', markersize=10, color='r')
 
 plt.title("Visualisation des ordres passés")
 plt.show()
+
+# %%
