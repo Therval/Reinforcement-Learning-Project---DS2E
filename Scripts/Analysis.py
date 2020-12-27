@@ -47,7 +47,7 @@ class Agent:
         self.Capital = self.Capital + pf_actions["Portefeuille"].iloc[-1]
         profit = pf_actions["Portefeuille"].iloc[-1] - pf_actions["Portefeuille"][0]
         
-        print("Profit réalisé par cet agent: " + str(profit) + "€")
+        print("Profit réalisé par cet agent: " + str(round(profit, 2)) + "€")
         print("Gain cumulé: " + str(round(pf_actions["Cum_gain"].iloc[-1], 2)) + "%")
 
         return self.Capital, pf_actions, profit
@@ -111,7 +111,7 @@ class Agent:
 
         profit = stock["Total"].iloc[-1] - stock["Total"].iloc[0] # Calcul du profit
 
-        print("Profit réalisé par cet agent: " + str(profit) + "€")
+        print("Profit réalisé par cet agent: " + str(round(profit, 2)) + "€")
         print("Gain cumulé: " + str(round(stock["Cum_gain"].iloc[-1], 2)) + "%")
 
         return stock, profit
@@ -160,10 +160,7 @@ plt.show()
 # %% 3. Bandit à 5 bras
 """
 Créer une classe spécifique
+class Bandit():
 """
 # %% 4. ReinforcedAgent
-class QAgent():
-    """
-    A faire : 
-        - Agent avec q-learning
-    """
+# Libraries
