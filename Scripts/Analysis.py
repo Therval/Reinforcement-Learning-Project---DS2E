@@ -2,16 +2,14 @@
 RL Prject : Analyse
 """
 
-# --- 1. Chargement des librairies nécessaires et données
-# %% 
+# %% 1. Chargement des librairies nécessaires et données
 # Libraries
 import pandas as pd
 import numpy as np 
 import time
 import matplotlib.pyplot as plt
 
-# %%
-# --- 2. Definition des strategies financières de bases
+# %% 2. Definition des strategies financières de bases
 class Agent:
     def __init__(self, Capital, Commission):
         self.Capital = Capital #Correspond à l'argent que l'agent peut investir
@@ -56,7 +54,7 @@ class Agent:
     
 
     
-    def cross_moving_avr_strategy(self):
+    def cross_moving_avr_strategy(self, ma_court, ma_long):
         """
         ...
         """
@@ -74,11 +72,11 @@ class Agent:
         stock.drop(["index"], axis=1, inplace = True)
 
         # Calcul des moyennes mobiles
-        stock['MA 50'] = stock.iloc[:, 0].rolling(window=50, min_periods=1, center=False).mean()
-        stock['MA 100'] = stock.iloc[:, 0].rolling(window=100, min_periods=1, center=False).mean()
+        stock['MA_court'] = stock.iloc[:, 0].rolling(window=ma_court, min_periods=1, center=False).mean()
+        stock['MA_long'] = stock.iloc[:, 0].rolling(window=ma_long, min_periods=1, center=False).mean()
 
         # Definition des variables de signaux d'informations
-        stock["Signal"] = np.where(stock['MA 50'] > stock['MA 100'], 1, 0)   
+        stock["Signal"] = np.where(stock['MA_court'] > stock['MA_long'], 1, 0)   
         stock["Ordre"] = stock["Signal"].diff()
 
         # Definition des variables d'évolution du portfeuille, capital et gains 
@@ -133,7 +131,7 @@ plt.title("Gain cumulatif : Stratégie 1")
 # %% Test 2 : Cross Moving average
 # -- Strategie
 Strategie2 = Agent(Capital = 10000, Commission = 0.001)
-stock, profit = Strategie2.cross_moving_avr_strategy()
+stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=150)
 
 # %%
 # -- Information
