@@ -89,8 +89,8 @@ class Agent:
             # Signal d'achat 1, vente -1
             if stock["Ordre"][i] == 1:
                 "Dans ce cas, on achète"
-                self.nb_actions = int((Capital[i-1] - Capital[i-1]*self.Commission) / stock["MC.PA"][i]) #Nombre d'action que l'on peut acheter
-                Portefeuille.append(round((self.nb_actions*stock["MC.PA"][i]), 2)) 
+                self.nb_actions = int((Capital[i-1] - Capital[i-1]*self.Commission) / stock[action][i]) #Nombre d'action que l'on peut acheter
+                Portefeuille.append(round((self.nb_actions*stock[action][i]), 2)) 
                 Capital.append(round(Capital[i-1] - (Portefeuille[i] + (Portefeuille[i]*self.Commission)), 2))
 
             elif stock["Ordre"][i] == -1:
@@ -99,7 +99,7 @@ class Agent:
                 self.nb_actions = 0
 
             else:
-                Portefeuille.append(round((self.nb_actions*stock["MC.PA"][i]), 2))
+                Portefeuille.append(round((self.nb_actions*stock[action][i]), 2))
                 Capital.append(Capital[i-1])
         
         # Ajout de variables au dataset pour analyse
@@ -130,7 +130,7 @@ plt.title("Gain cumulatif : Stratégie 1")
 
 # %% Test 2 : Cross Moving average
 # -- Strategie
-Strategie2 = Agent(Capital = 1000, Commission = 0.001)
+Strategie2 = Agent(Capital = 10000, Commission = 0.001)
 stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=200)
 
 # %%
@@ -164,3 +164,7 @@ class Bandit():
 """
 # %% 4. ReinforcedAgent
 # Libraries
+class ReinforcedAgent():
+    """
+    
+    """
