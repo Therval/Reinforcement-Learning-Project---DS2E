@@ -2,7 +2,7 @@
 ## Agent simple: stratégies financières classiques ##
 #####################################################
 """
-Autheur : Valentin Joly
+Auteur : Valentin Joly
 Date de création : 05/01/2021
 Dernière modification : 23/01/21
 """
@@ -12,14 +12,14 @@ Dans ce premier du projet de Reinforcement Learning, nous allons voir comment cr
 financières simples à des fins de comparaison avec un agent renforcé. 
 Deux stratégies vont être abordées : 
     1 - Stratégie de marché : 
-        Dans cette stratégie, l'agent va achater un panier d'actions, à part égale, pour se constituer un
-        portefeuille dont les perfomances copieront exactement les mouvements du marché. 
+        Dans cette stratégie, l'agent va acheter un panier d'actions, à parts égales, pour se constituer un
+        portefeuille dont les performances copieront exactement les mouvements du marché. 
 
     2 - Cross Moving Average : 
         Ici, l'agent possèdera deux indicateurs financiers : une moyenne mobile courte et une longue.
         Il va se donc s'en servir pour identifier les signaux d'achat et de vente. Le principe est très simple
         puisque lorsque la moyenne mobile la plus courte devient supérieure à la moyenne mobile la plus longue,
-        alors l'agent achète. A l'inverse, c'est un signal de vente. 
+        alors l'agent achète. À l'inverse, c'est un signal de vente. 
 """
 
 # %% 1. Chargement des librairies nécessaires et données
@@ -29,7 +29,7 @@ from tqdm import tqdm_notebook
 import time
 import matplotlib.pyplot as plt
 
-# %% 2. Definition des strategies financières de bases
+# %% 2. Définition des strategies financières de bases
 class Agent:
     """Framework de la classe Agent
 
@@ -37,10 +37,10 @@ class Agent:
     Paramètres
     ----------
         Capital : Capital de départ de l'agent
-        Commission : Commission appliqué à chaque passage d'ordre
+        Commission : Commission appliquée à chaque passage d'ordre
     """
     def __init__(self, Capital, Commission):
-        self.Capital = Capital # Correspond à l'argent que l'agent peut investir
+        self.Capital = Capital # correspond à l'argent que l'agent peut investir
         self.Commission = Commission # Commission pour le passage d'un ordre
         self.stocks = pd.read_csv("/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data/Dataset_full.csv") #Représente le dataset 
 
@@ -85,7 +85,8 @@ class Agent:
         return self.Capital, pf_actions, profit
     
 
-    
+
+
     def cross_moving_avr_strategy(self, ma_court, ma_long):
         """"Définition de la stratégie Cross Moving Average
 
@@ -97,31 +98,31 @@ class Agent:
         """
         # Calcul de volatilité pour choix de l'action à trade (test sur 2 ans)
         variation_jour = self.stocks.iloc[0:538].pct_change()
-        # Quel action maximise la volatilité ?
+        # Quelle action maximise la volatilité ?
         max_vola = variation_jour.rolling(50).std() * np.sqrt(50)
         action = max_vola.sum().idxmax(axis = 1)
         print("L'action qui maximise la volatilité sur la période est " + str(action))
 
-        # 2. Execution de la stratégie sur le reste de la période
-        # Nouveau dataset avec l'action identitifiée seulement
+        # 2. Exécution de la stratégie sur le reste de la période
+        # Nouveau dataset avec l'action identifiée seulement
         stock = pd.DataFrame(self.stocks[action].iloc[539:5381])
-        stock = stock.reset_index() # Réinitialiser l'index du dataset
+        stock = stock.reset_index() # réinitialiser l'index du dataset
         stock.drop(["index"], axis=1, inplace = True)
 
         # Calcul des moyennes mobiles
         stock['MA_court'] = stock.iloc[:, 0].rolling(window=ma_court, min_periods=1, center=False).mean()
         stock['MA_long'] = stock.iloc[:, 0].rolling(window=ma_long, min_periods=1, center=False).mean()
 
-        # Definition des variables de signaux d'informations
+        # Définition des variables de signaux d'informations
         stock["Signal"] = np.where(stock['MA_court'] > stock['MA_long'], 1, 0)   
         stock["Ordre"] = stock["Signal"].diff()
 
-        # Definition des variables d'évolution du portfeuille, capital et gains 
+        # Définition des variables d'évolution du portefeuille, capital et gains 
         Portefeuille = [0]
         Capital = [self.Capital]
         Gains = [0]
 
-        # Execution de la strategie
+        # Execution de la strategy
         for i in tqdm_notebook(range(1, len(stock))):
             # Signal d'achat 1, vente -1
             if stock["Ordre"][i] == 1:
@@ -152,7 +153,6 @@ class Agent:
         print("Gain cumulé: " + str(round(stock["Cum_gain"].iloc[-1], 2)) + "%")
 
         return stock, profit
-
 
 
 # %% Test 1 : Stratégie simple (market return)
