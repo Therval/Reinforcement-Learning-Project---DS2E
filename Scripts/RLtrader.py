@@ -135,7 +135,7 @@ class TradingEnvironnement(gym.Env):
         def legend_labels(ax):
             handles, labels = ax.get_legend_handles_labels()
             unique = [(h, l) for i, (h, l) in enumerate(zip(handles, labels)) if l not in labels[:i]]
-            ax.legend(*zip(*unique))
+            ax.legend(*zip(*unique), loc = "upper left")
         
         # Mise à jour des valeurs
         self.j_graph.append(self.jour)
@@ -181,7 +181,6 @@ class TradingEnvironnement(gym.Env):
             legend_labels(self._ax[0])
             legend_labels(self._ax[1])
 
-            plt.legend(loc = "center")
             plt.pause(0.000001)
 
 
@@ -485,7 +484,7 @@ if __name__ == "__main__":
         for _ in range(agent.episodes_length):
             action = agent.act(state)
             next_state, reward, done = env.step(action)
-            env.render(episode = ep, update = 100) 
+            # env.render(episode = ep, update = 100) # Optionnel, uniquement si debugging
             loss = agent.observe(state, action, reward, next_state, done)
             state = next_state
             rew += reward
@@ -497,4 +496,3 @@ if __name__ == "__main__":
         action = agent.act(state)
         state, reward, done = env.step(action)
         env.render(episode = 0, update = 20)
-# %%
