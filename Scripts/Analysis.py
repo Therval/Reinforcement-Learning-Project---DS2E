@@ -193,3 +193,4 @@ ax1.plot(stock.loc[stock.Ordre == -1].index,
 
 plt.title("Visualisation des ordres passés")
 plt.show()
+# %%
