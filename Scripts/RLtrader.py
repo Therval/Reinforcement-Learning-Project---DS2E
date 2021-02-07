@@ -461,15 +461,15 @@ if __name__ == "__main__":
 
     # Instancier l'agent
     agent = ReinforcedAgent(state_size=len(env.reset(Capital = Capital)),
-                            action_size=len(env.actions),
-                            memory_size=50000,
-                            episodes=20,
-                            episode_length=len(env.stock),
-                            train_interval=50,
-                            gamma=0.1,
-                            learning_rate=0.003,
-                            batch_size=32,
-                            epsilon_min=0.05)
+                                action_size=len(env.actions),
+                                memory_size=100000,
+                                episodes=20,
+                                episode_length=len(env.stock),
+                                train_interval=50,
+                                gamma=0.5,
+                                learning_rate=0.003,
+                                batch_size=32,
+                                epsilon_min=0.01)
 
     # "Échauffement" de l'agent
     for _ in range(agent.memory_size):
@@ -496,3 +496,5 @@ if __name__ == "__main__":
         action = agent.act(state)
         state, reward, done = env.step(action)
         env.render(episode = 0, update = 20)
+
+# %%
