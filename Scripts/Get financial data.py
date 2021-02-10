@@ -40,6 +40,7 @@ dataset.rename(columns={"FP.PA":"Total", "SAN.PA":"Sanofi",
 Cela permet également de connaître à quel moment les cours démarrent.
 """
 dataset.plot(figsize = (16,8))
+plt.ylabel("Prix en €")
 
 # %% 
 # - Data processing
