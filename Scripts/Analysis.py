@@ -144,13 +144,12 @@ class Agent:
         stock["Portefeuille"] = Portefeuille
         stock["Capital"] = Capital
         stock["Total"] = stock["Portefeuille"] + stock["Capital"]
-        stock["Gain"] = stock["Total"].pct_change()*100
-        stock["Cum_gain"] = stock.Gain.cumsum()
+        stock["Gain"] = ((stock["Total"] - self.Capital)/self.Capital)*100
 
         profit = stock["Total"].iloc[-1] - stock["Total"].iloc[0] # Calcul du profit
 
         print("Profit réalisé par cet agent: " + str(round(profit, 2)) + "€")
-        print("Gain cumulé: " + str(round(stock["Cum_gain"].iloc[-1], 2)) + "%")
+        print("Gain cumulé: " + str(round(stock["Gain"].iloc[-1], 2)) + "%")
 
         return stock, profit
 
@@ -173,7 +172,7 @@ stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=200)
 # %%
 # -- Information
 # Gain cumulatif
-stock.Cum_gain.plot(figsize = (16, 10))
+stock.Gain.plot(figsize = (16, 10))
 plt.title("Gain cumulatif : Stratégie 2")
 
 # %% 
@@ -186,11 +185,12 @@ stock["MC.PA"].plot(ax=ax1, color='black', lw=2.)
 stock[['MA_court', 'MA_long']].plot(ax=ax1, lw=2.)
 ax1.plot(stock.loc[stock.Ordre == 1].index, 
          stock["MA_court"][stock.Ordre == 1.0],
-         '^', markersize=10, color='g')
+         '^', markersize=10, color='g', label = "Achat")
 ax1.plot(stock.loc[stock.Ordre == -1].index, 
          stock["MA_long"][stock.Ordre == -1],
-         'v', markersize=10, color='r')
+         'v', markersize=10, color='r', label = "Vente")
 
 plt.title("Visualisation des ordres passés")
+plt.legend()
 plt.show()
 # %%
