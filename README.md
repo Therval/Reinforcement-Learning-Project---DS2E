@@ -26,6 +26,7 @@ Nous travaillerons sur les prix de fermetures des actions (Close) par jour.
 ## Méthodologie
 ### Définitions des stratégies
  On va étudier la pertinance de stratégies basées sur l'apprentissage par renforcement en les comparants à des stratégies financières simples :
+ 
   1 - Stratégie de marché : 
     Dans cette stratégie, l'agent va acheter un panier d'actions, à parts égales, pour se constituer un portefeuille dont les performances copieront exactement les mouvements du marché. 
 
