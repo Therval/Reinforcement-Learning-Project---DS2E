@@ -8,7 +8,7 @@ Dernière modification : 23/01/21
 """
 
 """
-Dans ce premier du projet de Reinforcement Learning, nous allons voir comment créer deux stratégies 
+Dans ce premier script du projet de Reinforcement Learning, nous allons voir comment créer deux stratégies 
 financières simples à des fins de comparaison avec un agent renforcé. 
 Deux stratégies vont être abordées : 
     1 - Stratégie de marché : 
@@ -22,14 +22,14 @@ Deux stratégies vont être abordées :
         alors l'agent achète. À l'inverse, c'est un signal de vente. 
 """
 
-# %% 1. Chargement des librairies nécessaires et données
+# 1. Chargement des librairies nécessaires et données
 import pandas as pd
 import numpy as np 
 from tqdm import tqdm_notebook
 import time
 import matplotlib.pyplot as plt
 
-# %% 2. Définition des strategies financières de bases
+# 2. Définition des strategies financières de bases
 class Agent:
     """Framework de la classe Agent
 
@@ -42,7 +42,7 @@ class Agent:
     def __init__(self, Capital, Commission):
         self.Capital = Capital # correspond à l'argent que l'agent peut investir
         self.Commission = Commission # Commission pour le passage d'un ordre
-        self.stocks = pd.read_csv("/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data/Dataset_full.csv") #Représente le dataset 
+        self.stocks = pd.read_csv(r"Data/Dataset_full.csv") #Représente le dataset 
 
         self.nb_actions = 0
 
@@ -144,38 +144,37 @@ class Agent:
         stock["Portefeuille"] = Portefeuille
         stock["Capital"] = Capital
         stock["Total"] = stock["Portefeuille"] + stock["Capital"]
-        stock["Gain"] = ((stock["Total"] - self.Capital)/self.Capital)*100
+        stock["Gain"] = stock["Total"].pct_change()*100
+        stock["Cum_gain"] = stock.Gain.cumsum()
 
         profit = stock["Total"].iloc[-1] - stock["Total"].iloc[0] # Calcul du profit
 
         print("Profit réalisé par cet agent: " + str(round(profit, 2)) + "€")
-        print("Gain cumulé: " + str(round(stock["Gain"].iloc[-1], 2)) + "%")
+        print("Gain cumulé: " + str(round(stock["Cum_gain"].iloc[-1], 2)) + "%")
 
         return stock, profit
 
 
-# %% Test 1 : Stratégie simple (market return)
+# Test 1 : Stratégie simple (market return)
 # -- Strategie
 Strategie1 = Agent(Capital = 25000, Commission = 0)
 capital, pf_actions, profit = Strategie1.market_strategy()
 
-# -- Informations
+# Informations
 # Gain cumulatif
 pf_actions.Cum_gain.plot(figsize = (16, 10))
 plt.title("Gain cumulatif : Stratégie 1")
 
-# %% Test 2 : Cross Moving average
+# Test 2 : Cross Moving average
 # -- Strategie
 Strategie2 = Agent(Capital = 25000, Commission = 0.01)
 stock, profit = Strategie2.cross_moving_avr_strategy(ma_court = 50, ma_long=200)
 
-# %%
 # -- Information
 # Gain cumulatif
-stock.Gain.plot(figsize = (16, 10))
+stock.Cum_gain.plot(figsize = (16, 10))
 plt.title("Gain cumulatif : Stratégie 2")
 
-# %% 
 # Passage d'ordre
 # Initialize the plot figure
 fig = plt.figure(figsize = (16, 10))
@@ -185,12 +184,10 @@ stock["MC.PA"].plot(ax=ax1, color='black', lw=2.)
 stock[['MA_court', 'MA_long']].plot(ax=ax1, lw=2.)
 ax1.plot(stock.loc[stock.Ordre == 1].index, 
          stock["MA_court"][stock.Ordre == 1.0],
-         '^', markersize=10, color='g', label = "Achat")
+         '^', markersize=10, color='g')
 ax1.plot(stock.loc[stock.Ordre == -1].index, 
          stock["MA_long"][stock.Ordre == -1],
-         'v', markersize=10, color='r', label = "Vente")
+         'v', markersize=10, color='r')
 
 plt.title("Visualisation des ordres passés")
-plt.legend()
 plt.show()
-# %%

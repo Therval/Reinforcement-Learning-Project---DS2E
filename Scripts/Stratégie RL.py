@@ -7,7 +7,7 @@ Date de création : 05/01/2021
 Dernière modification : 23/01/21
 """
 
-# %% 1. Librairies
+# 1. Librairies
 # Envrionnement
 import pandas as pd
 import random
@@ -27,7 +27,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 %matplotlib
 
-# %% 2. Class definition
+# 2. Class definition
 """
 Dans cette classe, nous allons définir à la fois l'environnement mais aussi l'agent.
 On se sert de la classe 'gym.Env' comme structure par défaut pour faciliter le développement 
@@ -83,7 +83,7 @@ class TradingEnvironnement(gym.Env):
             ma_court : Nombre de jours à prendre en compte pour le calcul de la moyenne mobile la plus courte
             ma_long : Nombre de jours à prendre en compte pour le calcul de la moyenne mobile la plus longue
         """
-        df = pd.read_csv("/Users/valentinjoly/Documents/GitHub/Reinforcement-Learning-Project---DS2E/Data/Dataset_full.csv")
+        df = pd.read_csv(r"Data/Dataset_full.csv")
 
         # Selection de l'action MC.PA (pour comparaison avec les autres modèles non renforcés)
         stock = pd.DataFrame(df["MC.PA"].copy())
@@ -307,7 +307,8 @@ class TradingEnvironnement(gym.Env):
 
         return self.state
 
-# %%
+
+# Define ReinforcedAgent
 class ReinforcedAgent:
     """Framework de l'agent de type DQN (Deep Q-network)
 
@@ -378,7 +379,7 @@ class ReinforcedAgent:
         return model
 
     def act(self, state):
-        """Politique que suit l'agent. Corresponds à la politique epsilon-greedy.
+        """Politique que suit l'agent. Corresponds à la politique epsilon avec espilon décroissant.
 
         ----------
         Paramètres
@@ -453,7 +454,7 @@ class ReinforcedAgent:
         return state_batch, action_batch, reward_batch, next_state_batch, done_batch
 
 
-# %%
+# Run
 if __name__ == "__main__":
     # Instancier l'environnement
     Capital = 25000
@@ -463,7 +464,7 @@ if __name__ == "__main__":
     agent = ReinforcedAgent(state_size=len(env.reset(Capital = Capital)),
                                 action_size=len(env.actions),
                                 memory_size=100000,
-                                episodes=20,
+                                episodes=1,
                                 episode_length=len(env.stock),
                                 train_interval=50,
                                 gamma=0.5,
@@ -484,7 +485,7 @@ if __name__ == "__main__":
         for _ in range(agent.episodes_length):
             action = agent.act(state)
             next_state, reward, done = env.step(action)
-            # env.render(episode = ep, update = 100) # Optionnel, uniquement si debugging
+            env.render(episode = ep, update = 20) # Optionnel, uniquement si debugging
             loss = agent.observe(state, action, reward, next_state, done)
             state = next_state
             rew += reward
@@ -496,5 +497,3 @@ if __name__ == "__main__":
         action = agent.act(state)
         state, reward, done = env.step(action)
         env.render(episode = 0, update = 20)
-
-# %%
