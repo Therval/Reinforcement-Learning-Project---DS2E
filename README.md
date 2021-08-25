@@ -26,7 +26,7 @@ Nous travaillerons sur les prix de fermetures des actions (Close) par jour.
 ## Méthodologie
 ### Définitions des stratégies
  On va étudier la pertinance de stratégies basées sur l'apprentissage par renforcement en les comparants à des stratégies financières simples :
- 
+
   1 - Stratégie de marché : 
     Dans cette stratégie, l'agent va acheter un panier d'actions, à parts égales, pour se constituer un portefeuille dont les performances copieront exactement les mouvements du marché. 
 
@@ -52,25 +52,25 @@ Plusieurs informations sont à noter :
 ### Stratégie 1 : Stratégie de marché
 Ici, l’agent s’est constitué un panier de 5 actions présentées en début de rapport. Voici les performances de cette méthode qui nous servira de stratégie de base pour faire nos comparaisons.
 Dans cette configuration, notre agent réalise un pro t net de 51889.76€ sur la période.
-![Image](Graph/results1.png)
+![Image](Graph/result1.png)
 
 ### Stratégie 2 : Stratégie cross-moving average (CMA)
 Dans cette stratégie, l’agent à identi er que l’action la plus volatile sur les deux premières années était l’action LVMH. Ensuite, il va appliquer la stratégie pour essayer de tirer pro t de cette volatilité.
 Avec cette stratégie, notre agent surpasse les performances du marché et réalise un profit net de 64184.37€, malgré la présence d’une commission de 1%.
 Voici les résultats :
-![Image](Graph/results2.png)
+![Image](Graph/result2.png)
 
-![Image](Graph/results3.png)
+![Image](Graph/result3.png)
 
 ### Stratégie 3 : Deep Q-Learning
 Cette stratégie, étant très différente des deux précédentes, nécessite de s’y attarder plus longuement et de voir l’impact de certaines variables sur le pro t de notre agent avant de déterminer les valeurs qui lui permettront d’obtenir le pro t maximal.
 Premièrement, nous allons nous intéresser à la variable « gamma » qui représente le facteur d’actualisation. Voici les résultats pour différentes valeurs de gamma testées :
 #### Gamma = 0.2
-![Image](Graph/results4.png)
+![Image](Graph/result4.png)
 #### Gamma = 0.5
-![Image](Graph/results5.png)
+![Image](Graph/result5.png)
 #### Gamma = 0.8
-![Image](Graph/results6.png)
+![Image](Graph/result6.png)
 
 A noter, ces éléments graphiques s'affichent automatiquement lors de l'entraînement de l'agent, de manière dynamique.
 
