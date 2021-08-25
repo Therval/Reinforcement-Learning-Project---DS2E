@@ -71,6 +71,8 @@ Premièrement, nous allons nous intéresser à la variable « gamma » qui repr�
 #### Gamma = 0.8
 ![Image](Graph/results6.png)
 
+A noter, ces éléments graphiques s'affichent automatiquement lors de l'entraînement de l'agent, de manière dynamique.
+
 Avec ces différents graphiques, nous voyons qu’en termes de pro t, un taux d’actualisation égal à
 0.5 est notre meilleure solution pour maximiser le pro t de l’agent puisqu’il réalise un béné ce de
 plus de 75.000€ sur la période. C’est donc cette valeur que nous gardons.
@@ -90,4 +92,3 @@ Pour terminer, il faut aussi noter que les résultats peuvent différer si le te
   - Professeur : M. Bertrand KOEBEL
   - Étudiants : BRUNIQUET Mathis, JOLY Valentin
 
-## Crédit
