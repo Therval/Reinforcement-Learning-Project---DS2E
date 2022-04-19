@@ -74,7 +74,7 @@ Premièrement, nous allons nous intéresser à la variable « gamma » qui repr�
 
 A noter, ces éléments graphiques s'affichent automatiquement lors de l'entraînement de l'agent, de manière dynamique.
 
-Avec ces différents graphiques, nous voyons qu’en termes de pro t, un taux d’actualisation égal à
+Avec ces différents graphiques, nous voyons qu’en termes de profit, un taux d’actualisation égal à
 0.5 est notre meilleure solution pour maximiser le pro t de l’agent puisqu’il réalise un béné ce de
 plus de 75.000€ sur la période. C’est donc cette valeur que nous gardons.
 Ensuite, nous nous sommes intéressés à la variable « learning rate », correspond au facteur
